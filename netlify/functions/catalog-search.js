@@ -1,4 +1,4 @@
-﻿import search from "../../api/catalog/search.js";
+import * as searchModule from "../../api/catalog/search.js";
 
 export const handler = async (event) => {
   const request = {
@@ -20,10 +20,46 @@ export const handler = async (event) => {
     },
     json(data) {
       body = JSON.stringify(data);
-      return { statusCode, headers, body };
+      return this;
     },
   };
 
-  await search(request, response);
-  return { statusCode, headers, body };
+  try {
+    let search = searchModule.default;
+
+    // Handle possible module interop differences in Netlify's bundle.
+    if (typeof search !== "function" && typeof search?.default === "function") {
+      search = search.default;
+    }
+
+    if (typeof search !== "function") {
+      throw new TypeError(
+        `Search export is not callable. Exports: ${Object.keys(searchModule).join(", ")}`
+      );
+    }
+
+    await search(request, response);
+
+    return {
+      statusCode,
+      headers: {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+      body,
+    };
+  } catch (error) {
+    console.error("Catalog search failed:", error);
+
+    return {
+      statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        error: "Catalog search failed",
+        message: error.message,
+      }),
+    };
+  }
 };
