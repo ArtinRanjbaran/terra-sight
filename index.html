@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f2f0e7" />
+    <meta name="description" content="TERRA SIGHT is an interactive Earth-observation platform for discovering, analyzing, and understanding change through real satellite radar data." />
+    <title>TERRA SIGHT — See beyond the surface</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="TERRA SIGHT home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="13.5"></circle><ellipse cx="17" cy="17" rx="6" ry="13.5"></ellipse><path d="M3.5 17h27M6.5 9.5h21M6.5 24.5h21"></path></svg>
+          </span>
+          <span class="brand-copy"><strong>TERRA <span>SIGHT</span></strong><small>SEE BEYOND THE SURFACE</small></span>
+        </a>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <a href="#earthSection" aria-current="page">Explore</a>
+          <a href="#discoverSection">Investigate</a>
+          <a href="#evidenceSection">Evidence</a>
+          <a href="#reportsSection">Reports</a>
+        </nav>
+        <div class="topbar-actions"><div class="mission-state"><span class="pulse-dot"></span><span id="serviceStatus">CONNECTING TO NASA CMR</span></div>
+          <button class="topbar-button" id="sourcesButton" type="button"><span>Sources</span><span aria-hidden="true">↗</span></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="earth-stage" id="earthSection" aria-labelledby="stageTitle">
+          <div class="stage-heading">
+            <div class="stage-title-copy">
+              <div class="eyebrow"><span class="eyebrow-line"></span> EARTH OBSERVATION <span class="hero-index">FIELD INVESTIGATION 01</span></div>
+              <h1 id="stageTitle">See beyond the <em>surface.</em></h1>
+              <p>Explore real satellite radar observations, investigate changes, and follow every result back to its source. Start with Vatnajökull, Iceland.</p>
+            </div>
+          </div>
+
+          <div class="globe-wrap" id="globeWrap">
+            <div class="globe-halo"></div>
+            <div class="globe-toolbar" aria-label="Globe controls">
+              <button class="icon-button" id="resetGlobe" type="button" aria-label="Recenter Earth" title="Recenter Earth">⌖</button>
+              <button class="icon-button" id="toggleOrbits" type="button" aria-pressed="true" title="Toggle schematic orbit" aria-label="Toggle schematic orbit">⌁</button>
+            </div>
+            <div class="earth-visual" id="earthCanvas" role="img" aria-label="Interactive textured 3D Earth. Geographic study markers and footprints come from NASA CMR catalog metadata.">
+              <div class="globe-load-state" id="globeLoadState">LOADING LOCAL EARTH TEXTURE…</div>
+            </div>
+            <div class="globe-callout-overlay">
+              <span class="readout-label">STUDY AREA / WGS84</span>
+              <strong id="globeStudyName">Vatnajökull · Iceland</strong>
+              <span id="globeStudyCoordinates">64.40° N · 16.80° W</span>
+            </div>
+            <div class="globe-readout"><span class="readout-label">SELECTED CENTER</span><strong id="globeReadoutName">Vatnajökull</strong><span id="globeReadoutCoordinates">64.40° N · 16.80° W</span></div>
+            <div class="coverage-legend"><span class="legend-dot"></span> STUDY CENTER <span class="legend-dash"></span> CMR FOOTPRINT <span class="legend-illustrative">· ORBIT IS SCHEMATIC</span></div>
+          </div>
+
+          <div class="lower-stage">
+            <div class="case-count"><span class="case-count-value" id="sceneCount">—</span><span>LIVE<br />SCENES</span></div>
+          </div>
+        </section>
+
+        <aside class="intel-panel" id="discoverSection" aria-label="Study location and satellite data discovery">
+          <div class="panel-topline"><div><span class="eyebrow">START AN INVESTIGATION</span><h2>Find your place.</h2></div><button class="help-button" id="onboardingButton" type="button" aria-label="How this works">How it works</button></div>
+          <p class="panel-intro">Search the live OPERA radar catalog or jump to a known map location.</p>
+          <label class="place-search" for="placeSearch"><span>LOCATION / COORDINATES</span><input id="placeSearch" type="search" list="placeOptions" value="Vatnajökull, Iceland" placeholder="Region, landmark, or 64.4, -16.8" autocomplete="off" /><datalist id="placeOptions"><option value="Vatnajökull, Iceland"></option><option value="San Andreas Fault, California"></option><option value="Mount Everest, Nepal"></option><option value="Reykjavík, Iceland"></option><option value="Mexico City, Mexico"></option></datalist></label>
+          <div class="place-actions"><button class="small-button" id="applyPlace" type="button">Set location</button><button class="text-link" id="saveStudy" type="button">SAVE STUDY</button></div>
+          <p class="catalog-source-note">Place names use built-in location presets; entered coordinates set the map center. A global geocoder is not connected.</p>
+          <label class="search-wrap scene-search" for="sceneFilter">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.2"></circle><path d="m12.4 12.4 4 4"></path></svg>
+            <input id="sceneFilter" type="search" placeholder="Filter returned observations" autocomplete="off" />
+            <kbd>Ctrl K</kbd>
+          </label>
+
+          <form class="catalog-form" id="catalogSearchForm">
+            <div class="catalog-form-header"><span>OBSERVATIONS / NASA CMR</span><span>LAST 12 MONTHS BY DEFAULT · AREA ≤ 20°</span></div>
+            <div class="filter-grid primary-filters">
+              <label>FROM <input name="start_date" type="date" value="2025-12-07" required /></label>
+              <label>TO <input name="end_date" type="date" value="2025-12-13" required /></label>
+              <label>PLATFORM <select name="platform"><option value="">All Sentinel-1</option><option value="S1A">Sentinel-1A</option><option value="S1B">Sentinel-1B</option><option value="S1C">Sentinel-1C</option></select></label>
+              <label>POLARIZATION <select name="polarization"><option value="">All</option><option value="VV">VV</option><option value="VH">VH</option></select></label>
+              <label>RELATIVE TRACK <input name="relative_track" type="number" min="1" max="175" value="" placeholder="Any" /></label>
+              <label>ACQUISITION MODE <select name="acquisition_mode"><option value="">Any mode</option><option value="IW">IW · Interferometric wide</option><option value="EW">EW · Extra-wide</option><option value="SM">SM · Stripmap</option><option value="WV">WV · Wave</option></select></label>
+              <label>SUBSWATH · IW/EW <select name="subswath"><option value="">Any subswath</option><option value="1">IW1 / EW1</option><option value="2">IW2 / EW2</option><option value="3">IW3 / EW3</option></select></label>
+            </div>
+            <details class="advanced-filters">
+              <summary>Advanced query & bounds <span>WGS84 / RTC-S1 v1</span></summary>
+              <div class="filter-grid bounds-grid">
+                <label>WEST <input name="west" type="number" min="-180" max="180" step="0.01" value="-17" required /></label>
+                <label>SOUTH <input name="south" type="number" min="-90" max="90" step="0.01" value="64" required /></label>
+                <label>EAST <input name="east" type="number" min="-180" max="180" step="0.01" value="-16" required /></label>
+                <label>NORTH <input name="north" type="number" min="-90" max="90" step="0.01" value="65" required /></label>
+                <label>ORBIT DIRECTION <select name="orbit_direction"><option value="">Any / not reported</option><option value="ASCENDING">Ascending</option><option value="DESCENDING">Descending</option></select></label>
+                <label>PRODUCT <select disabled aria-label="Product type"><option>OPERA RTC-S1</option></select></label>
+              </div>
+              <p class="catalog-source-note">Orbit direction is filtered only when present in the returned CMR metadata; records without direction are excluded when a direction is selected. Subswath applies to IW/EW. Product type is fixed to the OPERA RTC-S1 collection.</p>
+            </details>
+            <button class="catalog-submit" type="submit" id="catalogSearchButton">Search observations <span>↗</span></button>
+          </form>
+
+          <div class="catalog-status-row"><span class="classification measured" id="catalogStatusBadge">CMR PENDING</span><button id="retryCatalog" type="button" hidden>Retry search ↻</button><button id="openCatalog" type="button" disabled>Source query ↗</button></div>
+          <div class="catalog-feedback" id="catalogFeedback" role="status" aria-live="polite">Connecting to the live NASA CMR catalog…</div>
+          <div class="observation-results" id="observationResults" aria-label="Live catalog results"></div>
+          <div class="catalog-pagination" id="catalogPagination" hidden>
+            <button type="button" id="catalogPreviousPage" aria-label="Previous catalog page">←</button>
+            <span id="catalogPageStatus">PAGE 1 / 1</span>
+            <button type="button" id="catalogNextPage" aria-label="Next catalog page">→</button>
+          </div>
+          <section class="selected-pair" aria-label="Selected acquisitions for comparison">
+            <div class="selected-pair-heading"><strong>Comparison pair</strong><span id="selectedPairCount">0 / 2 selected</span><button id="clearSelection" type="button" disabled>Clear</button></div>
+            <div class="selected-pair-items" id="selectedPairItems" aria-live="polite"><p>Select two observations. Your selection stays visible while you browse catalog pages.</p></div>
+          </section>
+          <div class="analysis-actions">
+            <button class="catalog-submit analysis-submit" type="button" id="runAnalysisButton" disabled>Run real backscatter analysis</button>
+            <button class="text-link earthdata-setup-link" id="openEarthdataSetup" type="button" aria-controls="credentialSetup">Add Earthdata token for local analysis</button>
+            <details class="local-raster-setup" id="localRasterSetup">
+              <summary>Use local GeoTIFFs without Earthdata Login</summary>
+              <p>Upload two single-band, calibrated gamma0 GeoTIFFs on the same pixel grid. The files are processed on this computer and deleted from temporary storage after analysis. Only NoData is excluded; no OPERA quality mask or source verification is applied.</p>
+              <form id="localRasterForm">
+                <label>BEFORE · GEOTIFF<input id="localBeforeFile" name="before_file" type="file" accept=".tif,.tiff,image/tiff" required /></label>
+                <label>AFTER · GEOTIFF<input id="localAfterFile" name="after_file" type="file" accept=".tif,.tiff,image/tiff" required /></label>
+                <label>UNITS FOR BOTH FILES<select name="units" required><option value="" selected disabled>Choose declared units</option><option value="linear_gamma0">Linear gamma0</option><option value="db_gamma0">Gamma0 in dB</option></select></label>
+                <label>POLARIZATION<select name="polarization"><option value="VV">VV</option><option value="VH">VH</option></select></label>
+                <label>BEFORE DATE · OPTIONAL<input name="before_date" type="date" /></label>
+                <label>AFTER DATE · OPTIONAL<input name="after_date" type="date" /></label>
+                <button class="small-button" type="submit">Analyze local files</button>
+              </form>
+              <p class="credential-status" id="localRasterStatus" role="status" aria-live="polite">No local files have been analyzed.</p>
+            </details>
+            <span id="analysisReadiness">Select two same-tile observations.</span>
+          </div>
+        </aside>
+      </main>
+
+      <section class="radar-console" id="comparisonSection" aria-label="Change Detective scientific investigation">
+        <div class="section-intro"><div><span class="eyebrow">DANCING WITH THE SARs · CHANGE DETECTIVE</span><h2>What changed — and where?</h2></div><p>Follow two real acquisition dates, inspect the footprint, and run a quality-screened comparison when authenticated rasters are available. Backscatter change is not ground motion.</p></div>
+        <div class="map-and-pair">
+          <section class="map-panel" aria-labelledby="mapTitle">
+            <div class="map-panel-heading"><div><span class="eyebrow">GEOGRAPHIC CONTEXT / WGS84</span><h3 id="mapTitle">Change microscope</h3></div><div class="map-controls"><button id="toggleChangeLayer" class="change-layer-toggle" type="button" aria-label="Show derived radar change layer" aria-pressed="false" title="Derived radar change layer; requires processed rasters" disabled>Δ</button><button id="mapZoomIn" type="button" aria-label="Zoom map in">+</button><button id="mapZoomOut" type="button" aria-label="Zoom map out">−</button><button id="mapFit" type="button">Fit</button></div></div>
+            <div class="map-canvas-wrap"><canvas id="studyMap" role="application" tabindex="0" aria-label="Interactive equirectangular WGS84 map. Click to choose a study center, use arrow keys to pan, and press Enter to select the center."></canvas><div class="map-coordinates" id="mapCoordinates">WGS84 · WAITING FOR STUDY AREA</div></div>
+            <div class="map-legend"><span><i class="map-key study-key"></i> Study boundary</span><span><i class="map-key footprint-key"></i> CMR footprint</span><span id="changeLayerLegend" hidden><i class="map-key change-low-key"></i> LOWER Δγ⁰ <i class="map-key change-high-key"></i> HIGHER · dB · SHADE ±6 · OPACITY = VALID FRACTION</span><span id="mapScale">WGS84 · EQUIRECTANGULAR VIEW</span></div>
+            <div class="change-cell-readout" id="changeCellReadout" role="status" aria-live="polite">Derived cell inspection appears only after a real raster comparison; click a colored cell to inspect its evidence.</div>
+          </section>
+          <div class="pair-column">
+            <div class="console-title"><span class="console-kicker">SOURCE BROWSE PREVIEWS</span><div class="comparison-heading-actions"><span class="console-subtitle">VISUAL CONTEXT · NOT MEASUREMENTS</span><div class="compare-mode-switch" role="group" aria-label="Browse preview comparison layout"><button id="browseSideBySideButton" type="button" aria-pressed="true" disabled>Side by side</button><button id="browseSwipeButton" type="button" aria-pressed="false" disabled>Swipe</button></div></div></div>
+        <div class="comparison-area" id="browseComparisonArea" data-view="side-by-side">
+          <div class="browse-card">
+            <div class="browse-image-wrap"><img id="browseImage" alt="NASA OPERA RTC-S1 source browse image for the selected observation" /><div class="image-vignette"></div><span class="image-chip">CMR BROWSE · <span id="browseDateLabel">NO PRODUCT SELECTED</span></span><span class="image-mode-tag">SOURCE PREVIEW</span><button class="image-expand" id="expandImage" type="button" aria-label="Open source browse image">⤢</button></div>
+            <div class="browse-caption"><span id="browseProduct">Waiting for live CMR results…</span><button id="downloadBrowse" type="button" aria-label="Open first source product">OPEN SOURCE ↗</button></div>
+          </div>
+          <div class="compare-divider"><span class="compare-icon">A/B</span><span>PAIR<br />COMPARE</span></div>
+          <div class="browse-card">
+            <div class="browse-image-wrap"><img id="secondBrowseImage" alt="NASA OPERA RTC-S1 source browse image for the comparison observation" /><div class="image-vignette"></div><span class="image-chip">CMR BROWSE · <span id="secondBrowseDateLabel">NO PRODUCT SELECTED</span></span><span class="image-mode-tag">SOURCE PREVIEW</span></div>
+            <div class="browse-caption"><span id="secondBrowseProduct">Waiting for live CMR results…</span><button id="downloadBrowse2" type="button" aria-label="Open second source product">OPEN SOURCE ↗</button></div>
+          </div>
+          <div class="change-note">
+            <div class="change-note-mark">!</div><span class="eyebrow">INTERPRET WITH CARE</span>
+            <p id="analysisSummary">No raster comparison has been run. Source previews are not analysis inputs.</p>
+            <button id="methodologyButton" class="text-link" type="button">How this works ↗</button>
+          </div>
+        </div>
+        <div class="browse-swipe-panel" id="browseSwipePanel" hidden>
+          <div class="browse-swipe-stage" id="browseSwipeStage" style="--browse-swipe-position: 50%">
+            <img id="browseSwipeBefore" alt="NASA CMR browse preview for comparison observation A; not an analytical raster" />
+            <div class="browse-swipe-after-clip" id="browseSwipeAfterClip"><img id="browseSwipeAfter" alt="NASA CMR browse preview for comparison observation B; not an analytical raster" /></div>
+            <span class="browse-swipe-chip browse-swipe-left" id="browseSwipeBeforeDate">OBSERVATION A</span>
+            <span class="browse-swipe-chip browse-swipe-right" id="browseSwipeAfterDate">OBSERVATION B</span>
+            <span class="browse-swipe-line" aria-hidden="true"></span>
+          </div>
+          <label class="raster-swipe-control" for="browseSwipeSlider"><span>VISUAL REVEAL · NOT GEO-ALIGNED</span><input id="browseSwipeSlider" type="range" min="0" max="100" value="50" aria-label="Reveal more of comparison observation B" disabled /><span id="browseSwipeValue">50%</span></label>
+          <p>CMR browse thumbnails are source previews. They may use different extents, contrast, or geometry; this swipe is for visual context only, not a pixel-aligned or quantitative change measurement.</p>
+        </div>
+          </div>
+        </div>
+        <section class="derived-comparison" id="derivedComparisonPanel" aria-labelledby="derivedComparisonTitle" hidden>
+          <div class="derived-comparison-heading"><div><span class="eyebrow">DERIVED RASTER COMPARISON</span><h3 id="derivedComparisonTitle">Same grid. Same place. Two acquisitions.</h3><p>These grayscale previews are rendered from the validated RTC rasters using one shared contrast stretch. Transparent areas contain no common quality-screened pixels.</p></div><div class="compare-mode-switch" role="group" aria-label="Analytical raster comparison layout"><button id="compareSwipeButton" type="button" aria-pressed="true">Swipe</button><button id="compareSideBySideButton" type="button" aria-pressed="false">Side by side</button></div></div>
+          <div class="raster-swipe" id="rasterSwipe" style="--swipe-position: 50%">
+            <img id="beforeRasterPreview" alt="Before acquisition analytical gamma0 raster preview, rendered using the shared backscatter stretch" />
+            <div class="raster-after-clip" id="rasterAfterClip"><img id="afterRasterPreview" alt="After acquisition analytical gamma0 raster preview, rendered using the same shared backscatter stretch" /></div>
+            <span class="raster-date-chip raster-before-date" id="beforeRasterDate">BEFORE</span><span class="raster-date-chip raster-after-date" id="afterRasterDate">AFTER</span>
+            <span class="raster-swipe-line" aria-hidden="true"></span>
+          </div>
+          <label class="raster-swipe-control" for="rasterSwipeSlider"><span>BEFORE / AFTER REVEAL</span><input id="rasterSwipeSlider" type="range" min="0" max="100" value="50" aria-label="Reveal more of the after-acquisition raster" /><span id="rasterSwipeValue">50%</span></label>
+          <div class="raster-side-by-side" id="rasterSideBySide" hidden>
+            <figure><figcaption id="beforeRasterCaption">BEFORE · ANALYTICAL RTC PREVIEW</figcaption><img id="beforeRasterSide" alt="Before acquisition OPERA RTC-S1 raster on the matched analysis grid" /></figure>
+            <figure><figcaption id="afterRasterCaption">AFTER · ANALYTICAL RTC PREVIEW</figcaption><img id="afterRasterSide" alt="After acquisition OPERA RTC-S1 raster on the matched analysis grid" /></figure>
+          </div>
+          <label class="raster-opacity-control" for="afterRasterOpacity"><span>AFTER-LAYER OPACITY</span><input id="afterRasterOpacity" type="range" min="0" max="100" value="100" aria-label="Set after-acquisition raster opacity" /><span id="afterRasterOpacityValue">100%</span></label>
+          <p class="raster-comparison-provenance" id="rasterComparisonProvenance"></p>
+        </section>
+        <div class="analysis-map" id="analysisMapPanel" hidden>
+          <div class="analysis-map-head"><span class="eyebrow">DERIVED / OPERA RTC-S1 γ⁰ BACKSCATTER CHANGE</span><span id="analysisMapUnits">dB · AFTER − BEFORE</span></div>
+          <img id="changeMap" alt="Derived change in OPERA RTC-S1 gamma-zero backscatter, in decibels" />
+          <div class="analysis-map-legend"><span>LOWER BACKSCATTER</span><span class="delta-gradient"></span><span>HIGHER BACKSCATTER</span><span id="analysisMapGrid"></span></div>
+          <div id="analysisStatistics" class="analysis-statistics"></div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-label"><span class="eyebrow">ACQUISITION TIMELINE</span><span class="timeline-period" id="timelinePeriod">WAITING FOR LIVE OBSERVATIONS</span></div>
+          <div class="timeline-controls"><span class="timeline-date" id="timelineStartLabel">BEFORE</span><input id="timelineSlider" type="range" min="0" max="1" value="0" step="1" aria-label="Select acquisition date" disabled /><span class="timeline-date" id="timelineEndLabel">AFTER</span><button id="playTimeline" class="play-button" type="button" aria-label="Play between observation dates" disabled>▶</button></div>
+          <div class="timeline-legend"><span class="timeline-dot"></span> CMR OBSERVATION <span class="timeline-dot dot-c"></span> COMPARISON PAIR <span class="legend-separator"></span><span id="timelineStatus">NO RESULTS LOADED</span></div>
+        </div>
+        <section class="temporal-profile" aria-labelledby="temporalProfileTitle">
+          <div class="temporal-profile-heading">
+            <div><span class="eyebrow">MULTI-DATE · DERIVED FROM REAL RTC RASTERS</span><h3 id="temporalProfileTitle">Radar return through time</h3><p>Build a VV or VH profile from 3–6 compatible acquisitions. Every date is summarized over the same valid pixels; the curve is backscatter intensity, not glacier speed or displacement.</p></div>
+            <button class="small-button" id="runTemporalProfile" type="button" disabled>Build temporal profile</button>
+          </div>
+          <div class="temporal-profile-status" id="temporalProfileStatus" role="status" aria-live="polite">Search a wider date range to discover repeated acquisitions.</div>
+          <div class="temporal-profile-result" id="temporalProfileResult" hidden>
+            <div class="temporal-profile-summary" id="temporalProfileSummary"></div>
+            <div class="temporal-chart-wrap"><svg id="temporalProfileChart" viewBox="0 0 900 340" role="img" aria-labelledby="temporalChartTitle temporalChartDescription"><title id="temporalChartTitle">Temporal gamma-zero backscatter profile</title><desc id="temporalChartDescription"></desc></svg></div>
+            <div class="temporal-observation-table-wrap"><table class="temporal-observation-table"><thead><tr><th>Date (UTC)</th><th>Platform</th><th>Median γ⁰ (dB)</th><th>Common valid pixels</th><th>Source</th></tr></thead><tbody id="temporalObservationRows"></tbody></table></div>
+            <p class="temporal-limit">Derived descriptive profile. No automatic anomaly threshold, causal attribution, displacement, or formal uncertainty is claimed.</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="evidence-workspace" id="evidenceSection" aria-labelledby="evidenceTitle">
+        <div class="evidence-heading"><div><span class="eyebrow">EVIDENCE / QUALITY & PROVENANCE</span><h2 id="evidenceTitle">Know what the data can support.</h2><p id="evidenceCopy">Acquisition records will load from NASA CMR. No change result is assumed.</p></div><div class="evidence-actions"><span class="classification measured" id="evidenceClassification">CATALOG PENDING</span></div></div>
+        <div class="quality-grid">
+          <article class="quality-note"><span class="quality-number">01</span><h3>Coverage & pairing</h3><p id="qualityPairing">Compatibility is checked from tile, acquisition mode, subswath, and shared polarization. Direction filters only use direction when NASA CMR reports it.</p><span id="qualityPairStatus" class="quality-status">AWAITING PAIR</span></article>
+          <article class="quality-note"><span class="quality-number">02</span><h3>Processing access</h3><p id="qualityAccess">Authenticated RTC rasters and quality masks are required before calculating a backscatter difference.</p><span id="workflowStatus" class="quality-status">RASTER NOT PROCESSED</span>
+            <details class="credential-setup" id="credentialSetup">
+              <summary>Connect your Earthdata Login token</summary>
+              <p class="credential-note">Pixel calculations run locally in the built-in scientific processor; no AI model or external AI service is used. Enter your own Earthdata Login token to retrieve protected source rasters. The token is sent only to this computer's local backend, held in memory for this session, and never saved by the app. Never use this control on a public deployment.</p>
+              <form id="earthdataCredentialForm" autocomplete="off">
+                <label for="earthdataToken">EARTHDATA LOGIN TOKEN</label>
+                <div class="credential-input-row"><input id="earthdataToken" name="token" type="password" maxlength="4096" autocomplete="new-password" autocapitalize="off" spellcheck="false" required /><button class="small-button" type="submit">Connect token</button></div>
+              </form>
+              <button class="credential-forget" id="forgetEarthdataToken" type="button" hidden>Forget session token</button>
+              <p class="credential-status" id="earthdataCredentialStatus" role="status" aria-live="polite">A token is required for authenticated raster analysis.</p>
+            </details>
+          </article>
+          <article class="quality-note"><span class="quality-number">03</span><h3>Interpretation limits</h3><p id="evidenceLimit"><strong>Backscatter is not displacement.</strong> Moisture, snow, melt, roughness, sensor and viewing geometry can change the radar return.</p><button id="methodologyButton2" class="text-link" type="button">Method & limitations ↗</button></article>
+        </div>
+        <section class="reports-workspace" id="reportsSection" aria-labelledby="reportsTitle">
+          <div class="reports-heading"><div><span class="eyebrow">REPORTS / REPRODUCIBLE RECORDS</span><h3 id="reportsTitle">Keep the evidence with the finding.</h3><p>Save a local investigation or export a portable report. Missing measurements stay missing.</p></div><div class="report-actions"><button class="small-button" id="saveReport" type="button">Save investigation</button><button class="text-link" id="reportButton" type="button">Preview report</button><button class="text-link" id="exportReport" type="button">Download JSON</button><button class="text-link" id="exportHtmlReport" type="button">Download HTML</button></div></div>
+          <div id="savedReports" class="saved-reports" role="list" aria-live="polite"><p class="saved-reports-empty">Saved investigations appear here on this device.</p></div>
+        </section>
+        <div class="report-row"><div class="method-track" aria-label="Reproducible workflow">
+          <div class="method-step pending" id="methodCatalog"><span>01</span><i></i><small>Catalog</small></div>
+          <div class="method-step pending" id="methodProducts"><span>02</span><i></i><small>Products</small></div>
+          <div class="method-step pending" id="methodAnalysis"><span>03</span><i></i><small>Compare</small></div>
+          <div class="method-step pending" id="methodReport"><span>04</span><i></i><small>Report</small></div>
+        </div><button class="assistant-cta" id="assistantButton" type="button"><span class="assistant-spark">✳</span><span><strong>Open the Evidence Guide</strong><small>Rule-based answers cite loaded records and methods</small></span><span class="cta-arrow">↗</span></button></div>
+      </section>
+
+      <footer class="global-footer"><span>REAL DATA <i>·</i> REPRODUCIBLE METHODS <i>·</i> HONEST UNCERTAINTY</span><span>NASA SPACE APPS CHALLENGE · 2026</span><button id="limitationsButton" type="button">SOURCES & LIMITATIONS <span>↗</span></button></footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <dialog class="detail-dialog" id="detailDialog"><div class="dialog-header"><div><span class="eyebrow" id="dialogEyebrow">INVESTIGATION FILE</span><h2 id="dialogTitle">Source & methodology</h2></div><button class="dialog-close" id="dialogClose" type="button" aria-label="Close dialog">×</button></div><div class="dialog-content" id="dialogContent"></div></dialog>
+    <dialog class="onboarding-dialog" id="onboardingDialog"><div class="dialog-header"><div><span class="eyebrow">A SHORT FIELD GUIDE</span><h2>How to read this observatory.</h2></div><button class="dialog-close" id="onboardingClose" type="button" aria-label="Close introduction">×</button></div><div class="dialog-content"><p class="onboarding-lead">Synthetic Aperture Radar (SAR) sends microwave pulses and measures their echoes. It can observe at night and through clouds; repeat passes let researchers compare how a surface scatters radar energy.</p><ol><li><strong>Choose a place and dates.</strong> Query NASA CMR for real OPERA RTC-S1 acquisitions.</li><li><strong>Inspect the evidence.</strong> Browse previews and map footprints help you assess coverage, not movement.</li><li><strong>Compare compatible rasters.</strong> Authenticated products and matching quality masks are required for derived backscatter change.</li></ol><p>Backscatter change is not a displacement measurement. This prototype does not implement InSAR, coherence, or glacier velocity.</p><button class="catalog-submit" id="onboardingContinue" type="button">Explore Vatnajökull <span>↗</span></button></div></dialog>
+    <dialog class="assistant-dialog" id="assistantDialog">
+      <div class="dialog-header"><div><span class="eyebrow">EVIDENCE-AWARE FIELD ASSISTANT</span><h2>Ask about this investigation.</h2></div><button class="dialog-close" id="assistantClose" type="button" aria-label="Close assistant">×</button></div>
+      <p class="assistant-disclaimer">Answers are generated from the current NASA CMR records and the analysis record loaded in this session. No external AI model or unsupported source is used.</p>
+      <div class="assistant-messages" id="assistantMessages" aria-live="polite"><div class="assistant-message"><span class="assistant-avatar">✳</span><p>Search NASA CMR to load a study pair. I can explain source records, RTC backscatter, the derived comparison, and its limits.</p></div></div>
+      <div class="suggested-questions"><button type="button" data-question="What did the analysis calculate?">What did the analysis calculate?</button><button type="button" data-question="Can this measure glacier motion?">Can this measure motion?</button><button type="button" data-question="How reliable is this result?">How reliable is it?</button></div>
+      <form class="assistant-form" id="assistantForm"><input id="assistantInput" type="text" placeholder="Ask a question about this study…" autocomplete="off" /><button type="submit" aria-label="Send question">↑</button></form>
+    </dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
